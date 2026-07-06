@@ -8,9 +8,9 @@
 
 ---
 
-## 🏛️ Flagship Production Architectures
+# 🏛️ Flagship Production Architectures
 
-### 1. [RoosCloset Retail Intelligence](https://github.com/najmun-ai/rooscloset-retail-intelligence)
+## 1. [RoosCloset Retail Intelligence](https://github.com/najmun-ai/rooscloset-retail-intelligence)
 **B2B Enterprise SaaS | Real-Time Causal Inference & Semantic Cataloging**  
 Our enterprise retail suite solves the $100B fashion e-commerce return hemorrhage by replacing correlation dashboards with actionable causal intelligence.
 
@@ -23,7 +23,7 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
                       ▼
                Kinesis Data Streams ──▶ Lambda (DoWhy Causal Graph) ──▶ EventBridge
 ```
-### 2. [BoroBhai Civic Infrastructure](https://github.com/najmun-ai/Bangla-AI)
+## 2. [BoroBhai Civic Infrastructure](https://github.com/najmun-ai/Bangla-AI)
 **B2G Civic Technology | Serverless Conversational AI**  
 **BoroBhai** is an AI-powered civic assistant that helps Bengali-speaking citizens navigate government documentation and administrative processes through conversational AI. Users ask questions in Bengali or Banglish, and BoroBhai responds with:
 - **Generated Documents**: CVs, letters, leave applications, salary certificates, trade licenses, agreements, and more
@@ -32,7 +32,7 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
 - **Smart Retrieval**: Context-aware knowledge base with hybrid search (semantic + keyword)
 - **Dual Persona**: Compassionate tone for civic guidance, formal for legal/administrative documents
 
-## Key Features
+### Key Features
 
 - **Split-pane Chat UI**: Real-time messaging with document preview
 - **Voice-First Input**: Bengali speech recognition (fallback to text)
@@ -42,7 +42,7 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
 - **Cost Efficient**: ~$22/month all-in (Bedrock + Groq + S3 + EC2)
 - **RTL Layout**: Full right-to-left support for Bengali UI
 
-## Tech Stack
+### Tech Stack
 
 **Frontend**: Next.js 14 (App Router), React 18, Tailwind CSS, Vercel AI SDK, MediaRecorder API  
 **Backend**: AWS Lambda (Python), AWS Bedrock (Claude 3.5 Sonnet), Amazon Titan Embeddings  
