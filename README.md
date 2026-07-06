@@ -25,61 +25,29 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
 ```
 ### 2. [BoroBhai Civic Infrastructure](https://github.com/najmun-ai/Bangla-AI)
 **B2G Civic Technology | Serverless Conversational AI**  
-Digital infrastructure securely guiding Bengali-speaking citizens through complex municipal workflows at fractions of a cent per session.
+Digital infrastructure securely guiding Bengali-speaking citizens through complex municipal workflows at fractions of a cent per # BoroBhai - Bengali Civic AI Assistant
 
-* **Hybrid Retrieval:** Orchestrates Claude 3.5 Sonnet and Amazon Titan Embeddings to semantically query a vector knowledge base of 179 expert-reviewed civic procedures.
-* **Serverless Execution:** Completely stateless architecture behind HTTP API Gateway. Generates dynamic municipal documents (CVs, applications, licenses) via headless Lambda manipulation and serves them via time-limited, pre-signed Amazon S3 URLs.
+**BoroBhai** is an AI-powered civic assistant that helps Bengali-speaking citizens navigate government documentation and administrative processes through conversational AI. Users ask questions in Bengali or Banglish, and BoroBhai responds with:
+- **Generated Documents**: CVs, letters, leave applications, salary certificates, trade licenses, agreements, and more
+- **File Manipulation**: PDF compression/merging, image resizing, Excel generation
+- **Voice Input**: Transcription in Bengali (bn-BD) via Groq/Web Speech API
+- **Smart Retrieval**: Context-aware knowledge base with hybrid search (semantic + keyword)
+- **Dual Persona**: Compassionate tone for civic guidance, formal for legal/administrative documents
 
+## Key Features
 
-┌─────────────────────────────────────────────────────────────────┐
-│                   User Interface Layer                          │
-│  Next.js 14 App Router | React 18 | Tailwind CSS | Web Speech   │
-│  • Chat pane (messages + streaming)                             │
-│  • Document pane (preview + download)                           │
-│  • Voice input (bn-BD transcription)                            │
-│  • File upload (S3 presigned URLs)                              │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────────┐
-│                    API Integration Layer                        │
-│  Next.js API Routes | Node.js Runtime | Vercel AI SDK           │
-│  • /api/chat → AWS Bedrock invocation + streaming               │
-│  • /api/upload → S3 presigned URL generation                    │
-│  • /api/stt → Groq Whisper transcription (fallback)            │
-│  • /api/presign-upload → Client-side file PUT                  │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────────┐
-│                  Bedrock Orchestration Layer                    │
-│  AWS Bedrock | Claude 3.5 Sonnet | Tool-Use Enabled            │
-│  • Receives user message + system prompt + tools                │
-│  • Evaluates: chat response OR invoke tool(s)                   │
-│  • Routes tool calls to Lambda functions                        │
-│  • Streams final response to frontend                           │
-│                                                                 │
-│  Tools Available:                                               │
-│  ├─ compress_pdf (PyMuPDF)                                      │
-│  ├─ merge_pdfs (PyMuPDF)                                        │
-│  ├─ resize_image (Pillow)                                       │
-│  ├─ generate_excel (openpyxl)                                   │
-│  ├─ generate_letter_docx (python-docx + Jinja2)               │
-│  └─ generate_cv_docx (python-docx + templates)                 │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────────┐
-│                    Lambda Functions Layer                       │
-│  AWS Lambda (Python 3.11) | Docker Container Support            │
-│  • proofsheet-orchestrator: Bedrock invocation + agentic loop   │
-│  • proofsheet-file-tools: PDF/image/Excel/DOCX generation      │
-│  • proofsheet-presign: S3 presigned URL generation              │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────────┐
-│                   Storage & Retrieval Layer                     │
-│  AWS S3 | DynamoDB | In-Memory KB | Amazon Titan Embeddings     │
-│  • S3: User files (compressed/, images/, exports/, letters/)    │
-│  • DynamoDB: Chat history (optional, for session recovery)      │
-│  • In-Memory KB: 179 pre-embedded chunks (1024-dim Titan)       │
-│  • Retrieval: Hybrid search (cosine similarity + BM25)          │
-│  • Lifecycle: Auto-delete files after 7 days                    │
-└─────────────────────────────────────────────────────────────────┘
+- **Split-pane Chat UI**: Real-time messaging with document preview
+- **Voice-First Input**: Bengali speech recognition (fallback to text)
+- **Document Generation**: 12+ professional templates (CV, letter, agreement, salary cert, etc.)
+- **File Tools**: Compress PDFs, merge files, resize images, generate Excel sheets
+- **Knowledge Base**: 179 expert-reviewed civic procedures + empathy markers
+- **Cost Efficient**: ~$22/month all-in (Bedrock + Groq + S3 + EC2)
+- **RTL Layout**: Full right-to-left support for Bengali UI
+
+## Tech Stack
+
+**Frontend**: Next.js 14 (App Router), React 18, Tailwind CSS, Vercel AI SDK, MediaRecorder API  
+**Backend**: AWS Lambda (Python), AWS Bedrock (Claude 3.5 Sonnet), Amazon Titan Embeddings  
+**Data**: S3 (file storage + presigned URLs), DynamoDB (optional session management)  
+**Voice**: Groq Whisper API (STT) + Web Speech API (bn-BD)  
+**Infrastructure**: AWS CDK (TypeScript), HTTP API Gateway
