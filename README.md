@@ -25,8 +25,6 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
 ```
 ### 2. [BoroBhai Civic Infrastructure](https://github.com/najmun-ai/Bangla-AI)
 **B2G Civic Technology | Serverless Conversational AI**  
-Digital infrastructure securely guiding Bengali-speaking citizens through complex municipal workflows at fractions of a cent per # BoroBhai - Bengali Civic AI Assistant
-
 **BoroBhai** is an AI-powered civic assistant that helps Bengali-speaking citizens navigate government documentation and administrative processes through conversational AI. Users ask questions in Bengali or Banglish, and BoroBhai responds with:
 - **Generated Documents**: CVs, letters, leave applications, salary certificates, trade licenses, agreements, and more
 - **File Manipulation**: PDF compression/merging, image resizing, Excel generation
