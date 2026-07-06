@@ -23,24 +23,63 @@ API Gateway ──▶ Lambda (XGBoost Scoring) ──▶ DynamoDB (State)
                       ▼
                Kinesis Data Streams ──▶ Lambda (DoWhy Causal Graph) ──▶ EventBridge
 ```
-
-2. BoroBhai Civic Infrastructure
-
-B2G Civic Technology | Serverless Conversational AI
+### 2. [BoroBhai Civic Infrastructure](https://github.com/najmun-ai/Bangla-AI)
+**B2G Civic Technology | Serverless Conversational AI**  
 Digital infrastructure securely guiding Bengali-speaking citizens through complex municipal workflows at fractions of a cent per session.
 
-· Hybrid Retrieval: Orchestrates Claude 3.5 Sonnet and Amazon Titan Embeddings to semantically query a vector knowledge base of 179 expert-reviewed civic procedures.
-· Serverless Execution: Completely stateless architecture behind HTTP API Gateway. Generates dynamic municipal documents (CVs, applications, licenses) via headless Lambda manipulation and serves them via time-limited, pre-signed Amazon S3 URLs.
+* **Hybrid Retrieval:** Orchestrates Claude 3.5 Sonnet and Amazon Titan Embeddings to semantically query a vector knowledge base of 179 expert-reviewed civic procedures.
+* **Serverless Execution:** Completely stateless architecture behind HTTP API Gateway. Generates dynamic municipal documents (CVs, applications, licenses) via headless Lambda manipulation and serves them via time-limited, pre-signed Amazon S3 URLs.
 
-⚙️ Core AWS Engineering Stack
 
-My infrastructure is 100% defined as Infrastructure-as-Code (IaC) via AWS CDK. Multi-tenant isolation is strictly enforced through tenant-prefixed S3 paths, partition-keyed DynamoDB tables, and per-tenant OpenSearch indices.
-
-Architectural Domain AWS Native Services Deployed Implementation Focus
-Compute & Orchestration AWS Lambda, Step Functions, API Gateway Stateless execution, 5-stage pipeline error handling, and API throttling.
-Machine Learning & AI SageMaker, Bedrock, Rekognition XGBoost endpoints, CLIP embeddings, and Foundation Model multi-modal reasoning.
-Data & Persistence S3, DynamoDB, OpenSearch Serverless Lifecycle-managed data lakes, high-throughput feature stores, and k-NN vector indexing.
-Streaming & Events Kinesis, EventBridge, SQS Real-time payload sharding, async causal processing, and pipeline backpressure buffering.
-Security & Observability Cognito, IAM, CloudWatch, X-Ray Zero-trust authentication, least-privilege role scoping, and distributed tracing.
-
-All repositories pinned below contain fully documented Infrastructure-as-Code (CDK) deployments and technical architecture specifications.
+┌─────────────────────────────────────────────────────────────────┐
+│                   User Interface Layer                          │
+│  Next.js 14 App Router | React 18 | Tailwind CSS | Web Speech   │
+│  • Chat pane (messages + streaming)                             │
+│  • Document pane (preview + download)                           │
+│  • Voice input (bn-BD transcription)                            │
+│  • File upload (S3 presigned URLs)                              │
+└──────────────────────┬──────────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────────┐
+│                    API Integration Layer                        │
+│  Next.js API Routes | Node.js Runtime | Vercel AI SDK           │
+│  • /api/chat → AWS Bedrock invocation + streaming               │
+│  • /api/upload → S3 presigned URL generation                    │
+│  • /api/stt → Groq Whisper transcription (fallback)            │
+│  • /api/presign-upload → Client-side file PUT                  │
+└──────────────────────┬──────────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────────┐
+│                  Bedrock Orchestration Layer                    │
+│  AWS Bedrock | Claude 3.5 Sonnet | Tool-Use Enabled            │
+│  • Receives user message + system prompt + tools                │
+│  • Evaluates: chat response OR invoke tool(s)                   │
+│  • Routes tool calls to Lambda functions                        │
+│  • Streams final response to frontend                           │
+│                                                                 │
+│  Tools Available:                                               │
+│  ├─ compress_pdf (PyMuPDF)                                      │
+│  ├─ merge_pdfs (PyMuPDF)                                        │
+│  ├─ resize_image (Pillow)                                       │
+│  ├─ generate_excel (openpyxl)                                   │
+│  ├─ generate_letter_docx (python-docx + Jinja2)               │
+│  └─ generate_cv_docx (python-docx + templates)                 │
+└──────────────────────┬──────────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────────┐
+│                    Lambda Functions Layer                       │
+│  AWS Lambda (Python 3.11) | Docker Container Support            │
+│  • proofsheet-orchestrator: Bedrock invocation + agentic loop   │
+│  • proofsheet-file-tools: PDF/image/Excel/DOCX generation      │
+│  • proofsheet-presign: S3 presigned URL generation              │
+└──────────────────────┬──────────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────────┐
+│                   Storage & Retrieval Layer                     │
+│  AWS S3 | DynamoDB | In-Memory KB | Amazon Titan Embeddings     │
+│  • S3: User files (compressed/, images/, exports/, letters/)    │
+│  • DynamoDB: Chat history (optional, for session recovery)      │
+│  • In-Memory KB: 179 pre-embedded chunks (1024-dim Titan)       │
+│  • Retrieval: Hybrid search (cosine similarity + BM25)          │
+│  • Lifecycle: Auto-delete files after 7 days                    │
+└─────────────────────────────────────────────────────────────────┘
